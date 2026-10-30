@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | Morfin Beauty</title>
+  <meta name="description" content="Get in touch with Morfin Beauty.">
+  <meta property="og:title" content="Contact | Morfin Beauty">
+  <meta property="og:description" content="Get in touch with Morfin Beauty.">
+  <meta property="og:image" content="assets/img/og-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#2a0409">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body data-page="contact">
+  <div data-site-header></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Contact</p>
+        <h1 class="gold-text shimmer">Say Hello</h1>
+        <div class="divider divider--center"><span class="sparkle"></span></div>
+        <p class="lede">Questions, collaborations, or simply a love letter to red lipstick. We would be delighted to hear from you.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container contact-split">
+        <aside class="contact-card reveal">
+          <h2>Morfin Beauty</h2>
+          <ul class="contact-list">
+            <li><span>Email</span><a data-config-email href="mailto:hello@morfinbeauty.com">hello@morfinbeauty.com</a></li>
+            <li><span>Instagram</span><a data-config-social="instagram" href="#" target="_blank" rel="noopener">@morfinbeauty</a></li>
+            <li><span>TikTok</span><a data-config-social="tiktok" href="#" target="_blank" rel="noopener">@morfinbeauty</a></li>
+            <li><span>Facebook</span><a data-config-social="facebook" href="#" target="_blank" rel="noopener">Morfin Beauty</a></li>
+          </ul>
+          <p>Press and wholesale enquiries are welcome. Please mention them in your message.</p>
+        </aside>
+
+        <form class="contact-form reveal" data-form="contact" data-success="Thank you. Your message is on its way, and we will be in touch soon.">
+          <input type="hidden" name="form" value="Contact">
+          <div class="row">
+            <div class="field">
+              <label for="c-name">Name</label>
+              <input id="c-name" name="name" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="c-email">Email</label>
+              <input id="c-email" type="email" name="email" required autocomplete="email">
+            </div>
+          </div>
+          <div class="field">
+            <label for="c-subject">Subject</label>
+            <input id="c-subject" name="subject">
+          </div>
+          <div class="field">
+            <label for="c-message">Message</label>
+            <textarea id="c-message" name="message" rows="6" required></textarea>
+          </div>
+          <div class="field">
+            <button class="btn btn--gold" type="submit">Send Message <span class="arrow">&rarr;</span></button>
+          </div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div data-site-footer></div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
