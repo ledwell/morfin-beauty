@@ -6,9 +6,9 @@
 //   type        short product type shown under the name, e.g. "Matte Lipstick"
 //   badge       small corner label such as "New", or null for none
 //   shades      list of { name, hex } swatches, or [] for products without shades
-//   image       path to a product photo, or null to show a "Coming Soon" card
-//   art         drawing used on the "Coming Soon" card when there is no image
-//   price       e.g. "$38", or null to show "Price TBA"
+//   image       path to a product photo, or null to show a line drawing instead
+//   art         line drawing used when there is no image
+//   price       number in the store currency, or null for "Price TBA" (current prices are placeholders)
 //   featured    true to show on the home page
 window.MB_COLLECTIONS = [
   { id: 'lips', name: 'The Lip Collection', short: 'Lips', blurb: 'Velvet color and liquid gold, made to be remembered.' },
@@ -30,7 +30,7 @@ window.MB_PRODUCTS = [
     ],
     description: 'A high-shine ruby gloss with a cushiony, non-sticky feel.',
     image: 'assets/img/product-signature-lip-gloss.webp',
-    price: null,
+    price: 32,
     featured: true,
   },
   {
@@ -47,7 +47,7 @@ window.MB_PRODUCTS = [
     ],
     description: 'A true red in a soft velvet-matte finish.',
     image: 'assets/img/product-rouge-royale-lipstick.webp',
-    price: null,
+    price: 38,
     featured: true,
   },
   {
@@ -62,7 +62,7 @@ window.MB_PRODUCTS = [
     ],
     description: 'A sheer, golden-shimmer oil that keeps lips soft.',
     image: 'assets/img/product-glow-lip-oil.webp',
-    price: null,
+    price: 30,
     featured: true,
   },
   {
@@ -77,7 +77,7 @@ window.MB_PRODUCTS = [
     ],
     description: 'Warm rose with a fine gold shimmer.',
     image: 'assets/img/product-rose-gold-shimmer-gloss.webp',
-    price: null,
+    price: 32,
     featured: true,
   },
   {
@@ -85,12 +85,12 @@ window.MB_PRODUCTS = [
     name: 'Reine Eau de Parfum',
     collection: 'fragrance',
     type: 'Eau de Parfum, 50 ml',
-    badge: 'Coming soon',
+    badge: null,
     shades: [],
     description: 'Rose, amber and a touch of oud.',
     image: null,
     art: 'perfume',
-    price: null,
+    price: 125,
     featured: false,
   },
   {
@@ -98,12 +98,12 @@ window.MB_PRODUCTS = [
     name: 'Velours Rouge Eau de Parfum',
     collection: 'fragrance',
     type: 'Eau de Parfum, 50 ml',
-    badge: 'Coming soon',
+    badge: null,
     shades: [],
     description: 'Black cherry and vanilla, made for evenings.',
     image: null,
     art: 'perfume-round',
-    price: null,
+    price: 125,
     featured: false,
   },
   {
@@ -111,7 +111,7 @@ window.MB_PRODUCTS = [
     name: 'Velvet Crown Foundation',
     collection: 'face',
     type: 'Satin Liquid Foundation',
-    badge: 'Coming soon',
+    badge: null,
     shades: [
       { name: 'Porcelain', hex: '#f1d3bc' },
       { name: 'Sand', hex: '#e2b896' },
@@ -123,7 +123,7 @@ window.MB_PRODUCTS = [
     description: 'Lightweight, satin-finish foundation with buildable coverage.',
     image: null,
     art: 'foundation',
-    price: null,
+    price: 52,
     featured: false,
   },
   {
@@ -131,7 +131,7 @@ window.MB_PRODUCTS = [
     name: 'Rose Petal Blush',
     collection: 'face',
     type: 'Powder Blush',
-    badge: 'Coming soon',
+    badge: null,
     shades: [
       { name: 'Rose Petal', hex: '#d98a8f' },
       { name: 'Peach', hex: '#e9a184' },
@@ -140,7 +140,7 @@ window.MB_PRODUCTS = [
     description: 'A silky powder blush in a soft rose.',
     image: null,
     art: 'compact',
-    price: null,
+    price: 36,
     featured: false,
   },
   {
@@ -148,7 +148,7 @@ window.MB_PRODUCTS = [
     name: 'Gilded Glow Highlighter',
     collection: 'face',
     type: 'Powder Highlighter',
-    badge: 'Coming soon',
+    badge: null,
     shades: [
       { name: 'Champagne', hex: '#ecd0a5' },
       { name: 'Gold', hex: '#d4a24f' },
@@ -157,7 +157,7 @@ window.MB_PRODUCTS = [
     description: 'A warm gold highlighter for cheekbones and collarbones.',
     image: null,
     art: 'highlighter',
-    price: null,
+    price: 40,
     featured: false,
   },
 ];

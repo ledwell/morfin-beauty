@@ -4,6 +4,10 @@ window.MB_CONFIG = {
   // Leave empty while previewing: forms will show their thank-you state without sending anything.
   formEndpoint: '',
 
+  // Demo checkout settings. Real prices, tax and shipping will come from the payment provider.
+  currency: 'USD',
+  shipping: { standard: 8, express: 15, freeOver: 75 },
+
   email: 'hello@morfinbeauty.com',
   social: {
     instagram: 'https://instagram.com/morfinbeauty',

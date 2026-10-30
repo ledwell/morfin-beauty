@@ -13,7 +13,16 @@ A grouping of Morfin Beauty products by type. There are three: the **Lip Collect
 "Luxury Lips. Lasting Impression." The brand's single primary tagline, used site-wide regardless of Collection.
 
 ## Inner Circle
-The Morfin Beauty mailing list. Joining it ("Join the Inner Circle") is how visitors hear about launches. A **Notify Me** request is an Inner Circle sign-up tied to one specific product.
+The Morfin Beauty mailing list. Joining it ("Join the Inner Circle") is how visitors hear about launches.
+
+## Shade
+One color option of a product, such as "Merlot" for the Rouge Royale Lipstick. A customer always buys a product in a specific shade; products without color options (fragrance) have no shade.
+
+## Bag
+The products and shades a customer has chosen but not yet ordered. Always "bag", never "cart" or "basket".
+
+## Order
+What a bag becomes when the customer completes checkout and pays.
 
 ## Monogram
 The interlocked gold "MB" mark. The **sparkle monogram** (MB with a four-point star) is the primary logo; the **crown monogram** (MB topped by a crown) is an accent mark only.
