@@ -1032,6 +1032,14 @@ main {
     padding-inline: var(--gutter);
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
+    /* Sideways only: nothing inside may make the strip scroll up and down. */
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Cards in a carousel fade in without sliding up, which would add height. */
+  .js .carousel > .reveal {
+    transform: none;
   }
 
   .carousel::-webkit-scrollbar {
