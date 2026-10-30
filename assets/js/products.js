@@ -10,10 +10,14 @@
 //   art         line drawing used when there is no image
 //   price       number in the store currency, or null for "Price TBA" (current prices are placeholders)
 //   featured    true to show on the home page
+//   pairsWith   ids shown under "Complete the look" on the product page
+//   includes    for sets: ids of the products inside
+//   shades[].image  optional photo of that shade; the product page swaps to it
 window.MB_COLLECTIONS = [
   { id: 'lips', name: 'The Lip Collection', short: 'Lips', blurb: 'Velvet color and liquid gold, made to be remembered.' },
   { id: 'fragrance', name: 'The Fragrance Collection', short: 'Fragrance', blurb: 'A signature that lingers long after you leave the room.' },
   { id: 'face', name: 'The Face Collection', short: 'Face', blurb: 'A flawless canvas, kissed with light.' },
+  { id: 'sets', name: 'Gifts & Sets', short: 'Sets', blurb: 'Signature pieces, beautifully boxed for gifting.' },
 ];
 
 window.MB_PRODUCTS = [
@@ -32,6 +36,7 @@ window.MB_PRODUCTS = [
     image: 'assets/img/product-signature-lip-gloss.webp',
     price: 32,
     featured: true,
+    pairsWith: ['rouge-royale-lipstick', 'glow-lip-oil', 'gilded-glow-highlighter'],
   },
   {
     id: 'rouge-royale-lipstick',
@@ -49,6 +54,7 @@ window.MB_PRODUCTS = [
     image: 'assets/img/product-rouge-royale-lipstick.webp',
     price: 38,
     featured: true,
+    pairsWith: ['signature-lip-gloss', 'rose-petal-blush', 'reine-eau-de-parfum'],
   },
   {
     id: 'glow-lip-oil',
@@ -64,6 +70,7 @@ window.MB_PRODUCTS = [
     image: 'assets/img/product-glow-lip-oil.webp',
     price: 30,
     featured: true,
+    pairsWith: ['rose-gold-shimmer-gloss', 'gilded-glow-highlighter', 'rose-petal-blush'],
   },
   {
     id: 'rose-gold-shimmer-gloss',
@@ -79,6 +86,7 @@ window.MB_PRODUCTS = [
     image: 'assets/img/product-rose-gold-shimmer-gloss.webp',
     price: 32,
     featured: true,
+    pairsWith: ['glow-lip-oil', 'rose-petal-blush', 'gilded-glow-highlighter'],
   },
   {
     id: 'reine-eau-de-parfum',
@@ -92,6 +100,7 @@ window.MB_PRODUCTS = [
     art: 'perfume',
     price: 125,
     featured: false,
+    pairsWith: ['rouge-royale-lipstick', 'velours-rouge-eau-de-parfum', 'red-carpet-lip-trio'],
   },
   {
     id: 'velours-rouge-eau-de-parfum',
@@ -105,6 +114,7 @@ window.MB_PRODUCTS = [
     art: 'perfume-round',
     price: 125,
     featured: false,
+    pairsWith: ['signature-lip-gloss', 'reine-eau-de-parfum', 'red-carpet-lip-trio'],
   },
   {
     id: 'velvet-crown-foundation',
@@ -125,6 +135,7 @@ window.MB_PRODUCTS = [
     art: 'foundation',
     price: 52,
     featured: false,
+    pairsWith: ['rose-petal-blush', 'gilded-glow-highlighter', 'rouge-royale-lipstick'],
   },
   {
     id: 'rose-petal-blush',
@@ -142,6 +153,7 @@ window.MB_PRODUCTS = [
     art: 'compact',
     price: 36,
     featured: false,
+    pairsWith: ['velvet-crown-foundation', 'gilded-glow-highlighter', 'rose-gold-shimmer-gloss'],
   },
   {
     id: 'gilded-glow-highlighter',
@@ -159,5 +171,21 @@ window.MB_PRODUCTS = [
     art: 'highlighter',
     price: 40,
     featured: false,
+    pairsWith: ['velvet-crown-foundation', 'rose-petal-blush', 'glow-lip-oil'],
+  },
+  {
+    id: 'red-carpet-lip-trio',
+    name: 'Red Carpet Lip Trio',
+    collection: 'sets',
+    type: 'Lip Set, 3 pieces',
+    badge: 'Gift',
+    shades: [],
+    includes: ['signature-lip-gloss', 'rouge-royale-lipstick', 'glow-lip-oil'],
+    description: 'Signature Lip Gloss in Ruby, Rouge Royale Lipstick in Classic Rouge and Glow Lip Oil in Golden Glow, in a keepsake gift box.',
+    image: null,
+    art: 'gift',
+    price: 85,
+    featured: false,
+    pairsWith: ['reine-eau-de-parfum', 'gilded-glow-highlighter'],
   },
 ];

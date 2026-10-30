@@ -27,7 +27,15 @@
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.6V4.4a21 21 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4.1v2.1H8.6v3h2.7V21"/></svg>',
     bag:
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 13H6z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>',
+    search: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>',
   };
+
+  const HELP = [
+    { href: 'faq.html', label: 'FAQ' },
+    { href: 'shipping-returns.html', label: 'Shipping & Returns' },
+    { href: 'finder.html', label: 'Find Your Red' },
+    { href: 'privacy.html', label: 'Privacy Policy' },
+  ];
 
   const money = (n) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: config.currency || 'USD' }).format(n);
@@ -120,6 +128,7 @@
                 ).join('')}
               </ul>
             </nav>
+            <button class="icon-btn" type="button" data-open-search aria-label="Search">${ICONS.search}</button>
             <a class="bag-link" href="bag.html"${page === 'bag' ? ' aria-current="page"' : ''}>
               ${ICONS.bag}<span class="sr-only">Bag, </span><span class="bag-count" data-bag-count hidden>0</span>
             </a>
@@ -183,6 +192,12 @@
                 ${collections.map((c) => `<li><a href="shop.html#${c.id}">${esc(c.short)}</a></li>`).join('')}
               </ul>
             </div>
+            <nav aria-label="Help">
+              <h3 class="footer-title">Help</h3>
+              <ul>
+                ${HELP.map((n) => `<li><a href="${n.href}">${esc(n.label)}</a></li>`).join('')}
+              </ul>
+            </nav>
             <div>
               <h3 class="footer-title">Follow</h3>
               <ul class="social">
@@ -230,6 +245,10 @@
       <rect x="18" y="50" width="84" height="84" rx="10"/><rect x="28" y="60" width="64" height="64" rx="6"/>
       <path d="M36 112l20-36 8 14 6-8 14 30z" stroke-dasharray="2 4"/>
       <path d="M60 18l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></svg>`,
+    gift: `<svg viewBox="0 0 120 160" aria-hidden="true">
+      <rect x="18" y="62" width="84" height="80" rx="3"/><rect x="12" y="46" width="96" height="18" rx="2"/>
+      <path d="M60 46v96"/><path d="M60 46c-8-14-26-20-30-10s16 10 30 10c14 0 34 0 30-10s-22-4-30 10z"/>
+      <path d="M60 92l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></svg>`,
   };
 
   function collectionById(id) {
@@ -281,7 +300,17 @@
     scope.querySelectorAll('.swatch').forEach((s) => s.setAttribute('aria-pressed', String(s === swatch)));
     const label = scope.querySelector('[data-shade-label]');
     label.innerHTML = esc(swatch.dataset.shade) + shadeCount(Number(label.dataset.count || 0));
+    showShadeImage(scope, swatch.dataset.shade);
   });
+
+  // When a shade has its own photo, show it in that card or product page.
+  function showShadeImage(scope, shadeName) {
+    const p = products.find((x) => x.id === scope.dataset.productScope);
+    const img = scope.querySelector('.product-card__media img');
+    if (!p || !img) return;
+    const shade = (p.shades || []).find((s) => s.name === shadeName);
+    img.src = (shade && shade.image) || p.image;
+  }
 
   // "Add to Bag" on cards and product pages.
   document.addEventListener('click', (e) => {
@@ -358,7 +387,9 @@
       if (!list.length) return '';
       return `
         <section class="shop-group">
-          <div class="shop-group__head"><h2>${esc(col.short)}</h2><span>${list.length} pieces</span></div>
+          <div class="shop-group__head"><h2>${esc(col.short)}</h2>${
+            col.id === 'lips' ? '<a href="finder.html">Find your red &rarr;</a>' : `<span>${list.length} pieces</span>`
+          }</div>
           <div class="product-grid carousel">${list.map(productCard).join('')}</div>
         </section>`;
     }
@@ -411,6 +442,10 @@
     const col = collectionById(p.collection);
     const shades = p.shades || [];
     document.title = `${p.name} | Morfin Beauty`;
+    // Links such as the shade finder can preselect a shade with &shade=Name.
+    const wanted = new URLSearchParams(location.search).get('shade');
+    const startShade = Math.max(0, shades.findIndex((s) => s.name === wanted));
+    const included = (p.includes || []).map((id) => products.find((x) => x.id === id)).filter(Boolean);
 
     root.innerHTML = `
       <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -428,9 +463,17 @@
           <p class="product-page__price">${priceLabel(p)}</p>
           <p class="product-page__desc">${esc(p.description)}</p>
           ${
+            included.length
+              ? `<p class="product-page__label">In the set</p>
+                 <ul class="set-list">${included
+                   .map((x) => `<li><a href="${productUrl(x)}">${esc(x.name)}</a> <span>${esc(x.type || '')}</span></li>`)
+                   .join('')}</ul>`
+              : ''
+          }
+          ${
             shades.length
               ? `<div class="product-page__shades">
-                   <p class="product-page__label">Shade: <span data-shade-label data-count="0">${esc(shades[0].name)}</span></p>
+                   <p class="product-page__label">Shade: <span data-shade-label data-count="0">${esc(shades[startShade].name)}</span></p>
                    <div class="swatches swatches--lg">${swatchButtons(p)}</div>
                  </div>`
               : ''
@@ -465,25 +508,61 @@
       input.value = Math.max(1, Math.min(10, (parseInt(input.value, 10) || 1) + Number(step.dataset.qtyStep)));
     });
 
+    if (startShade > 0) {
+      const scope = root.querySelector('[data-product-scope]');
+      scope.querySelectorAll('.swatch').forEach((s, i) => s.setAttribute('aria-pressed', String(i === startShade)));
+      showShadeImage(scope, shades[startShade].name);
+    }
+
+    const pairs = (p.pairsWith || []).map((id) => products.find((x) => x.id === id)).filter(Boolean);
+    const lookGrid = document.querySelector('[data-look-products]');
+    if (lookGrid) {
+      if (pairs.length) lookGrid.innerHTML = pairs.map(productCard).join('');
+      else lookGrid.closest('section').hidden = true;
+    }
+
     const related = document.querySelector('[data-related-products]');
     if (related) {
-      const same = products.filter((x) => x.collection === p.collection && x.id !== p.id);
-      const others = products.filter((x) => x.collection !== p.collection);
+      const skip = new Set([p.id, ...pairs.map((x) => x.id)]);
+      const same = products.filter((x) => x.collection === p.collection && !skip.has(x.id));
+      const others = products.filter((x) => x.collection !== p.collection && !skip.has(x.id));
       related.innerHTML = same.concat(others).slice(0, 4).map(productCard).join('');
     }
   }
 
   /* ---------- Bag page ---------- */
 
+  const GIFT_KEY = 'mb-gift';
+
+  function readGift() {
+    try {
+      return JSON.parse(localStorage.getItem(GIFT_KEY)) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function writeGift(gift) {
+    try {
+      localStorage.setItem(GIFT_KEY, JSON.stringify(gift));
+    } catch (err) {
+      /* Storage unavailable: the choice lasts for this page only. */
+    }
+  }
+
   function summaryRows(totals) {
     return `
       <div class="summary__row"><span>Subtotal</span><span>${money(totals.subtotal)}</span></div>
       <div class="summary__row"><span>Shipping</span><span>${totals.shipping ? money(totals.shipping) : 'Free'}</span></div>
+      ${readGift().wrap ? '<div class="summary__row"><span>Gift wrapping</span><span>Complimentary</span></div>' : ''}
       <div class="summary__row summary__row--total"><span>Total</span><span>${money(totals.total)}</span></div>`;
   }
 
-  function lineThumb(p) {
-    return `<a class="line__thumb product-card__media${p.image ? '' : ' is-placeholder'}" href="${productUrl(p)}">${productMedia(p)}</a>`;
+  function lineThumb(p, asImage) {
+    const cls = `line__thumb product-card__media${p.image ? '' : ' is-placeholder'}`;
+    return asImage
+      ? `<span class="${cls}">${productMedia(p)}</span>`
+      : `<a class="${cls}" href="${productUrl(p)}" tabindex="-1" aria-hidden="true">${productMedia(p)}</a>`;
   }
 
   function renderBag() {
@@ -504,6 +583,7 @@
       }
       const ship = config.shipping || {};
       const totals = bagTotals(false);
+      const gift = readGift();
       root.innerHTML = `
         <div class="checkout-grid">
           <ul class="lines">
@@ -531,12 +611,22 @@
           </ul>
           <aside class="summary">
             <h2>Summary</h2>
+            <div class="ship-progress">
+              <p class="summary__note" style="margin:0">${
+                totals.subtotal < ship.freeOver
+                  ? `You're ${money(ship.freeOver - totals.subtotal)} away from free standard shipping.`
+                  : `You've unlocked free standard shipping.`
+              }</p>
+              <div class="ship-progress__bar" aria-hidden="true"><span style="width:${Math.min(100, (totals.subtotal / ship.freeOver) * 100)}%"></span></div>
+            </div>
             ${summaryRows(totals)}
-            ${
-              totals.subtotal < ship.freeOver
-                ? `<p class="summary__note">Add ${money(ship.freeOver - totals.subtotal)} more for free standard shipping.</p>`
-                : `<p class="summary__note">You've unlocked free standard shipping.</p>`
-            }
+            <div class="gift">
+              <label><input type="checkbox" data-gift-wrap${gift.wrap ? ' checked' : ''}> Add complimentary gift wrapping</label>
+              <div data-gift-extra${gift.wrap ? '' : ' hidden'}>
+                <label class="sr-only" for="gift-note">Gift message</label>
+                <textarea id="gift-note" rows="3" maxlength="200" placeholder="Add a gift message (optional)" data-gift-note>${esc(gift.note || '')}</textarea>
+              </div>
+            </div>
             <a class="btn btn--gold summary__cta" href="checkout.html">Checkout</a>
             <a class="summary__link" href="shop.html">Continue shopping</a>
           </aside>
@@ -558,6 +648,15 @@
       }
       writeBag(items);
       draw();
+    });
+
+    root.addEventListener('change', (e) => {
+      if (!e.target.matches('[data-gift-wrap]')) return;
+      writeGift({ ...readGift(), wrap: e.target.checked });
+      root.querySelector('[data-gift-extra]').hidden = !e.target.checked;
+    });
+    root.addEventListener('input', (e) => {
+      if (e.target.matches('[data-gift-note]')) writeGift({ ...readGift(), note: e.target.value });
     });
 
     draw();
@@ -623,7 +722,7 @@
               .map(
                 (l) => `
               <li>
-                ${lineThumb(l.product)}
+                ${lineThumb(l.product, true)}
                 <div><p class="line__name">${esc(l.product.name)}</p><p class="line__meta">${esc(l.shade || l.product.type || '')} &middot; Qty ${l.qty}</p></div>
                 <span>${money(l.product.price * l.qty)}</span>
               </li>`
@@ -647,6 +746,7 @@
       const email = form.elements.email.value;
       const orderNo = 'MB-' + String(Math.floor(100000 + Math.random() * 900000));
       writeBag([]);
+      writeGift({});
       root.innerHTML = `
         <div class="empty-state confirm">
           <p class="eyebrow">Demo order ${orderNo}</p>
@@ -656,6 +756,253 @@
         </div>`;
       window.scrollTo(0, 0);
     });
+  }
+
+/* ---------- Search ---------- */
+
+  function bindSearch() {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'search-dialog';
+    dialog.setAttribute('aria-label', 'Search products');
+    dialog.innerHTML = `
+      <div class="search-dialog__bar">
+        ${ICONS.search}
+        <label class="sr-only" for="site-search">Search products</label>
+        <input id="site-search" type="search" placeholder="Search lipstick, gloss, a shade like Merlot&hellip;" autocomplete="off">
+        <button class="search-dialog__close" type="button" data-close-search aria-label="Close search">&times;</button>
+      </div>
+      <div data-search-results></div>`;
+    document.body.appendChild(dialog);
+
+    const input = dialog.querySelector('input');
+    const out = dialog.querySelector('[data-search-results]');
+    const words = (p) =>
+      [p.name, p.type, collectionById(p.collection).name, ...(p.shades || []).map((s) => s.name)].join(' ').toLowerCase();
+
+    function search(q) {
+      const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (!terms.length) return products.filter((p) => p.featured).map((p) => ({ p }));
+      return products
+        .filter((p) => terms.every((t) => words(p).includes(t)))
+        .map((p) => ({ p, shade: (p.shades || []).find((s) => terms.some((t) => s.name.toLowerCase().includes(t))) }));
+    }
+
+    function draw() {
+      const q = input.value.trim();
+      const hits = search(q);
+      out.innerHTML = hits.length
+        ? `<p class="search-dialog__heading">${q ? 'Products' : 'Popular'}</p>
+           <ul class="search-dialog__results">${hits
+             .map(
+               ({ p, shade }) => `
+             <li><a class="search-result" href="${productUrl(p)}${shade ? '&shade=' + encodeURIComponent(shade.name) : ''}">
+               ${lineThumb(p, true)}
+               <span><strong>${esc(p.name)}</strong><small>${esc(shade ? 'Shade: ' + shade.name : p.type || '')}</small></span>
+               <span>${priceLabel(p)}</span>
+             </a></li>`
+             )
+             .join('')}</ul>`
+        : `<p class="search-dialog__empty">No results for &ldquo;${esc(q)}&rdquo;. Try &ldquo;lipstick&rdquo;, &ldquo;gloss&rdquo; or a shade such as &ldquo;Merlot&rdquo;.</p>`;
+    }
+
+    input.addEventListener('input', draw);
+    input.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter') return;
+      const first = out.querySelector('.search-result');
+      if (first) location.href = first.href;
+    });
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog || e.target.closest('[data-close-search]')) dialog.close();
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('[data-open-search]')) return;
+      draw();
+      dialog.showModal();
+      input.focus();
+    });
+  }
+
+  /* ---------- Inner Circle pop-up ---------- */
+
+  // Shown once per visitor, after a pause or partway down the page. Never on the bag
+  // or checkout. Add ?popup to any page URL to see it again when demoing.
+  function bindPopup() {
+    const KEY = 'mb-popup-seen';
+    const force = new URLSearchParams(location.search).has('popup');
+    if (page === 'bag' || page === 'checkout') return;
+    const remember = () => {
+      try {
+        localStorage.setItem(KEY, String(Date.now()));
+      } catch (err) {
+        /* ignore */
+      }
+    };
+    let seen = null;
+    try {
+      seen = localStorage.getItem(KEY);
+    } catch (err) {
+      return; // Without storage we can't remember a dismissal, so don't risk showing it on every page.
+    }
+    // Anyone who joins from the footer shouldn't be asked again.
+    document.addEventListener('submit', (e) => {
+      if (e.target.matches('[data-form="inner-circle"]')) remember();
+    });
+    if (seen && !force) return;
+
+    const dialog = document.createElement('dialog');
+    dialog.className = 'ic-popup';
+    dialog.setAttribute('aria-labelledby', 'ic-popup-title');
+    dialog.innerHTML = `
+      <div class="ic-popup__media" aria-hidden="true"></div>
+      <div class="ic-popup__body">
+        <button class="ic-popup__close" type="button" aria-label="Close">&times;</button>
+        <p class="eyebrow">An invitation</p>
+        <h2 class="display" id="ic-popup-title">Join the Inner Circle</h2>
+        <p>Early access to every launch, a first look at new shades, and private offers for members.</p>
+        <form class="inline-form" data-form="inner-circle" data-success="Welcome to the Inner Circle.">
+          <input type="hidden" name="form" value="Inner Circle (pop-up)">
+          <label class="sr-only" for="ic-pop-email">Email address</label>
+          <input id="ic-pop-email" type="email" name="email" placeholder="Your email address" required autocomplete="email" autofocus>
+          <button class="btn btn--gold" type="submit">Join</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+        <p class="ic-popup__fine">Unsubscribe anytime. See our <a href="privacy.html">Privacy Policy</a>.</p>
+      </div>`;
+    document.body.appendChild(dialog);
+
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog || e.target.closest('.ic-popup__close')) dialog.close();
+    });
+
+    let shown = false;
+    const show = () => {
+      if (shown || document.querySelector('dialog[open]') || document.body.classList.contains('nav-open')) return;
+      shown = true;
+      remember();
+      window.removeEventListener('scroll', onScroll);
+      dialog.showModal();
+    };
+    const onScroll = () => {
+      if (window.scrollY > (document.documentElement.scrollHeight - window.innerHeight) * 0.45) show();
+    };
+    setTimeout(show, force ? 800 : 12000);
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  /* ---------- Find Your Red (shade finder) ---------- */
+
+  const FINDER = [
+    {
+      name: 'finish',
+      q: 'How do you like your lips to feel?',
+      options: [
+        ['matte', 'Velvet matte', 'Soft, blurred and long-wearing'],
+        ['shine', 'High shine', 'Glossy, plush and light-catching'],
+        ['sheer', 'Sheer glow', 'A wash of color that cares for lips'],
+      ],
+    },
+    {
+      name: 'mood',
+      q: 'What is the moment?',
+      options: [
+        ['classic', 'Timeless', 'The red you reach for again and again'],
+        ['bold', 'After dark', 'Deep, dramatic, unforgettable'],
+        ['soft', 'Every day', 'Effortless color for any hour'],
+      ],
+    },
+    {
+      name: 'tone',
+      q: 'Which jewelry flatters you most?',
+      options: [
+        ['cool', 'Silver', 'Usually a sign of cool undertones'],
+        ['warm', 'Gold', 'Usually a sign of warm undertones'],
+        ['neutral', 'Both equally', 'Usually a sign of neutral undertones'],
+      ],
+    },
+  ];
+
+  // Answers to [product id, shade name]. Placeholder logic until real shades exist.
+  function finderPick(a) {
+    if (a.finish === 'matte') {
+      if (a.mood === 'bold') return ['rouge-royale-lipstick', 'Merlot'];
+      if (a.mood === 'soft') return ['rouge-royale-lipstick', a.tone === 'warm' ? 'Nude Rose' : 'Rosewood'];
+      return ['rouge-royale-lipstick', 'Classic Rouge'];
+    }
+    if (a.finish === 'shine') {
+      if (a.mood === 'soft') return ['rose-gold-shimmer-gloss', a.tone === 'warm' ? 'Rose Gold' : 'Champagne'];
+      if (a.mood === 'bold') return ['signature-lip-gloss', 'Garnet'];
+      return ['signature-lip-gloss', a.tone === 'cool' ? 'Cherry Kiss' : 'Ruby'];
+    }
+    return ['glow-lip-oil', a.tone === 'warm' ? 'Golden Glow' : 'Rose Glow'];
+  }
+
+  function renderFinder() {
+    const root = document.querySelector('[data-finder]');
+    if (!root) return;
+
+    function drawQuiz() {
+      root.innerHTML = `
+        <form class="finder" novalidate>
+          ${FINDER.map(
+            (step, i) => `
+            <fieldset class="finder__step">
+              <legend><span>Question ${i + 1} of ${FINDER.length}</span>${esc(step.q)}</legend>
+              <div class="finder__options">
+                ${step.options
+                  .map(
+                    ([value, label, hint]) => `
+                  <label class="finder__option">
+                    <input type="radio" name="${step.name}" value="${value}" required>
+                    <span>${esc(label)}<small>${esc(hint)}</small></span>
+                  </label>`
+                  )
+                  .join('')}
+              </div>
+            </fieldset>`
+          ).join('')}
+          <button class="btn btn--gold" type="submit">Reveal My Red <span class="arrow">&rarr;</span></button>
+        </form>`;
+      root.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+        const answers = Object.fromEntries(new FormData(form));
+        drawResult(...finderPick(answers));
+      });
+    }
+
+    function drawResult(id, shadeName) {
+      const p = products.find((x) => x.id === id);
+      const shade = (p.shades || []).find((s) => s.name === shadeName) || (p.shades || [])[0];
+      root.innerHTML = `
+        <div class="finder-result" data-product-scope="${esc(p.id)}">
+          <div class="product-card__media">${productMedia(p, true)}</div>
+          <div>
+            <p class="eyebrow">Your red</p>
+            <h2>${esc(p.name)}</h2>
+            <p class="finder-result__shade"><i style="--c:${esc(shade.hex)}"></i>${esc(shade.name)}</p>
+            <p>${esc(p.description)}</p>
+            <p class="product-page__price">${priceLabel(p)}</p>
+            <button class="swatch" type="button" hidden data-shade="${esc(shade.name)}" aria-pressed="true"></button>
+            <div class="actions">
+              <button class="btn btn--gold" type="button" data-add="${esc(p.id)}">Add to Bag</button>
+              <a class="btn btn--ghost" href="${productUrl(p)}&shade=${encodeURIComponent(shade.name)}">View Details</a>
+            </div>
+            <p style="margin-top:1.4rem"><a href="finder.html" data-restart>Take the quiz again</a></p>
+          </div>
+        </div>`;
+      showShadeImage(root.querySelector('[data-product-scope]'), shade.name);
+      root.querySelector('[data-restart]').addEventListener('click', (e) => {
+        e.preventDefault();
+        drawQuiz();
+      });
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    drawQuiz();
   }
 
 /* ---------- Forms ---------- */
@@ -742,6 +1089,9 @@
   renderProduct();
   renderBag();
   renderCheckout();
+  renderFinder();
+  bindSearch();
+  bindPopup();
   initCarousels();
   updateBagCount();
   fillContactDetails();

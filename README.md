@@ -30,6 +30,16 @@ Product photos go in `assets/img/`. Tall, portrait shots on a dark or transparen
 
 Each product has its own page (`product.html?id=<product id>`). Customers choose a shade and quantity and add to their bag (`bag.html`), which is kept in their own browser. `checkout.html` is a **demonstration only**: it collects no card details, sends nothing and charges nothing. When a payment provider is chosen, checkout will hand the bag to that provider instead. Demo shipping rates live in `shipping` in `assets/js/config.js`.
 
+## Other features
+
+- **Search** (header magnifier): searches product names, types, Collections and shade names; a shade match opens the product with that shade selected.
+- **Inner Circle pop-up**: appears once per visitor after 12 seconds or partway down a page, never on the bag or checkout. Add `?popup` to any page URL to show it again for demos.
+- **Find Your Red** (`finder.html`): a three-question shade quiz. The answer-to-shade rules are in `finderPick` in `assets/js/main.js` and are placeholders until the real shade range is final.
+- **Complete the look**: set `pairsWith` on a product in `products.js`.
+- **Shade photos**: add `image` to a shade in `products.js` and the product page swaps to it when that shade is picked.
+- **Gift wrapping** and a free-shipping progress bar in the bag.
+- **FAQ** and **Shipping & Returns** pages. Their answers and terms are placeholders, marked `PLACEHOLDER`, and must match the real store settings before launch.
+
 ## Archived design
 
 An alternative soft porcelain-and-blush design ("Design 2") was explored and set aside. It is preserved at the git tag `design-2-archive`; check it out with `git checkout design-2-archive`.
