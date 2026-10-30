@@ -11,9 +11,9 @@
 //   price       e.g. "$38", or null to show "Price TBA"
 //   featured    true to show on the home page
 window.MB_COLLECTIONS = [
-  { id: 'lips', name: 'The Lip Collection', short: 'Lips', blurb: 'Lipstick, gloss and lip oil in rich, long-wearing shades.' },
-  { id: 'fragrance', name: 'The Fragrance Collection', short: 'Fragrance', blurb: 'Warm, sensual scents designed to sit close to the skin.' },
-  { id: 'face', name: 'The Face Collection', short: 'Face', blurb: 'Soft-focus base, blush and highlight for a fresh glow.' },
+  { id: 'lips', name: 'The Lip Collection', short: 'Lips', blurb: 'Velvet color and liquid gold, made to be remembered.' },
+  { id: 'fragrance', name: 'The Fragrance Collection', short: 'Fragrance', blurb: 'A signature that lingers long after you leave the room.' },
+  { id: 'face', name: 'The Face Collection', short: 'Face', blurb: 'A flawless canvas, kissed with light.' },
 ];
 
 window.MB_PRODUCTS = [
@@ -35,7 +35,7 @@ window.MB_PRODUCTS = [
   },
   {
     id: 'rouge-royale-lipstick',
-    name: 'Classic Rouge Lipstick',
+    name: 'Rouge Royale Lipstick',
     collection: 'lips',
     type: 'Velvet Matte Lipstick',
     badge: 'New',
@@ -82,7 +82,7 @@ window.MB_PRODUCTS = [
   },
   {
     id: 'reine-eau-de-parfum',
-    name: 'Rosa Eau de Parfum',
+    name: 'Reine Eau de Parfum',
     collection: 'fragrance',
     type: 'Eau de Parfum, 50 ml',
     badge: 'Coming soon',
@@ -108,7 +108,7 @@ window.MB_PRODUCTS = [
   },
   {
     id: 'velvet-crown-foundation',
-    name: 'Second Skin Foundation',
+    name: 'Velvet Crown Foundation',
     collection: 'face',
     type: 'Satin Liquid Foundation',
     badge: 'Coming soon',
@@ -145,7 +145,7 @@ window.MB_PRODUCTS = [
   },
   {
     id: 'gilded-glow-highlighter',
-    name: 'Golden Hour Highlighter',
+    name: 'Gilded Glow Highlighter',
     collection: 'face',
     type: 'Powder Highlighter',
     badge: 'Coming soon',

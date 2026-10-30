@@ -31,12 +31,11 @@
     const slot = document.querySelector('[data-site-header]');
     if (!slot) return;
     slot.outerHTML = `
-      <div class="announcement">The Lip Collection is almost here. <a href="#inner-circle">Join the list</a> for first access.</div>
       <header class="site-header">
         <div class="container site-header__inner">
           <a class="brand" href="index.html" aria-label="Morfin Beauty home">
-            <img class="brand__mark" src="assets/img/monogram-red.png" alt="" width="300" height="226">
-            <span class="brand__name">Morfin Beauty</span>
+            <img class="brand__mark" src="assets/img/monogram.webp" alt="" width="600" height="451">
+            <span class="brand__name">Morfin<span>Beauty</span></span>
           </a>
           <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav">
             <span class="sr-only">Menu</span><span class="nav-toggle__bar"></span>
@@ -62,7 +61,7 @@
     });
 
     const header = document.querySelector('.site-header');
-    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 24);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
   }
@@ -75,24 +74,23 @@
     slot.outerHTML = `
       <footer class="site-footer">
         <div class="container">
-          <section class="inner-circle" id="inner-circle" aria-labelledby="inner-circle-title">
-            <div>
-              <h2 id="inner-circle-title">Join the Inner Circle</h2>
-              <p>Launch dates, new shades and the occasional note from Mary. No spam, ever.</p>
-            </div>
+          <section class="inner-circle" aria-labelledby="inner-circle-title">
+            <img class="inner-circle__crown" src="assets/img/crown-monogram.png" alt="" width="96" height="96" loading="lazy">
+            <p class="eyebrow">An invitation</p>
+            <h2 id="inner-circle-title" class="display">Join the Inner Circle</h2>
+            <p class="lede">First to know of every launch, every shade, every private moment from Morfin Beauty.</p>
             <form class="inline-form" data-form="inner-circle">
               <input type="hidden" name="form" value="Inner Circle">
               <label class="sr-only" for="ic-email">Email address</label>
               <input id="ic-email" type="email" name="email" placeholder="Your email address" required autocomplete="email">
-              <button class="btn btn--light" type="submit">Sign up</button>
+              <button class="btn btn--gold" type="submit">Join</button>
               <p class="form-status" role="status" aria-live="polite"></p>
             </form>
           </section>
 
           <div class="footer-grid">
             <div class="footer-brand">
-              <img src="assets/img/monogram-cream.png" alt="" width="300" height="226" loading="lazy">
-              <p>Morfin Beauty. Luxury lips, lasting impression.</p>
+              <img src="assets/img/wordmark.webp" alt="Morfin Beauty. Luxury Lips. Lasting Impression." width="760" height="320" loading="lazy">
             </div>
             <nav aria-label="Footer">
               <h3 class="footer-title">Explore</h3>
@@ -101,7 +99,7 @@
               </ul>
             </nav>
             <div>
-              <h3 class="footer-title">Shop</h3>
+              <h3 class="footer-title">The Collections</h3>
               <ul>
                 ${collections.map((c) => `<li><a href="shop.html#${c.id}">${esc(c.short)}</a></li>`).join('')}
               </ul>
@@ -121,7 +119,7 @@
           </div>
 
           <div class="footer-legal">
-            <p>&copy; ${year} Morfin Beauty</p>
+            <p>&copy; ${year} Morfin Beauty. All rights reserved.</p>
             <p><a href="privacy.html">Privacy Policy</a></p>
           </div>
         </div>
@@ -130,21 +128,29 @@
 
   /* ---------- Products ---------- */
 
-  // Line drawings for products that have no photograph yet.
+  // Gold line drawings for products that have no photograph yet.
   const ART = {
     perfume: `<svg viewBox="0 0 120 160" aria-hidden="true">
       <rect x="48" y="10" width="24" height="22" rx="3"/><rect x="54" y="32" width="12" height="10"/>
-      <path d="M30 42h60l8 18v80a10 10 0 0 1-10 10H32a10 10 0 0 1-10-10V60z"/><path d="M34 66h52"/></svg>`,
+      <path d="M30 42h60l8 18v80a10 10 0 0 1-10 10H32a10 10 0 0 1-10-10V60z"/>
+      <path d="M34 66h52M60 92l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></svg>`,
     'perfume-round': `<svg viewBox="0 0 120 160" aria-hidden="true">
-      <path d="M50 14h20v18H50z"/><path d="M46 32h28v10H46z"/><circle cx="60" cy="98" r="50"/></svg>`,
+      <path d="M50 14h20v18H50z"/><path d="M46 32h28v10H46z"/>
+      <circle cx="60" cy="98" r="50"/><circle cx="60" cy="98" r="38" stroke-dasharray="2 5"/>
+      <path d="M60 82l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></svg>`,
     foundation: `<svg viewBox="0 0 120 160" aria-hidden="true">
       <rect x="44" y="12" width="32" height="34" rx="4"/><path d="M50 46h20v8H50z"/>
-      <rect x="30" y="54" width="60" height="96" rx="8"/><path d="M30 76h60"/></svg>`,
+      <rect x="30" y="54" width="60" height="96" rx="8"/><path d="M30 76h60"/>
+      <path d="M60 100l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></svg>`,
     compact: `<svg viewBox="0 0 120 160" aria-hidden="true">
       <ellipse cx="60" cy="58" rx="46" ry="14"/><path d="M14 58v8c0 8 20 14 46 14s46-6 46-14v-8"/>
-      <ellipse cx="60" cy="110" rx="46" ry="14"/><path d="M14 110v10c0 8 20 14 46 14s46-6 46-14v-10"/></svg>`,
+      <ellipse cx="60" cy="110" rx="46" ry="14"/><path d="M14 110v10c0 8 20 14 46 14s46-6 46-14v-10"/>
+      <ellipse cx="60" cy="110" rx="32" ry="8" stroke-dasharray="2 4"/>
+      <path d="M60 34l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>`,
     highlighter: `<svg viewBox="0 0 120 160" aria-hidden="true">
-      <rect x="18" y="40" width="84" height="84" rx="12"/><rect x="30" y="52" width="60" height="60" rx="8"/></svg>`,
+      <rect x="18" y="50" width="84" height="84" rx="10"/><rect x="28" y="60" width="64" height="64" rx="6"/>
+      <path d="M36 112l20-36 8 14 6-8 14 30z" stroke-dasharray="2 4"/>
+      <path d="M60 18l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></svg>`,
   };
 
   function collectionById(id) {
@@ -163,7 +169,7 @@
       )
       .join('');
     return `
-      <article class="product-card" data-collection="${esc(p.collection)}">
+      <article class="product-card reveal" data-collection="${esc(p.collection)}">
         <div class="product-card__media${p.image ? '' : ' is-placeholder'}">
           ${p.badge ? `<span class="product-card__badge">${esc(p.badge)}</span>` : ''}
           ${media}
@@ -171,9 +177,9 @@
         <h3 class="product-card__name">${esc(p.name)}</h3>
         <p class="product-card__type">${esc(p.type || collectionById(p.collection).short)}</p>
         <div class="swatches">${swatches}</div>
-        <p class="product-card__shade">${shades.length ? esc(shades[0].name) + (shades.length > 1 ? ` <span>&middot; ${shades.length} shades</span>` : '') : ''}</p>
+        <p class="product-card__shade">${shades.length ? esc(shades[0].name) + (shades.length > 1 ? ` &middot; ${shades.length} shades` : '') : ''}</p>
         <p class="product-card__price">${p.price ? esc(p.price) : 'Price TBA'}</p>
-        <button class="btn-bag" type="button" data-notify="${esc(p.id)}">Notify me</button>
+        <button class="btn-bag" type="button" data-notify="${esc(p.id)}">Notify Me</button>
       </article>`;
   }
 
@@ -185,7 +191,7 @@
     card.querySelectorAll('.swatch').forEach((s) => s.setAttribute('aria-pressed', String(s === swatch)));
     const count = card.querySelectorAll('.swatch').length;
     card.querySelector('.product-card__shade').innerHTML =
-      esc(swatch.dataset.shade) + (count > 1 ? ` <span>&middot; ${count} shades</span>` : '');
+      esc(swatch.dataset.shade) + (count > 1 ? ` &middot; ${count} shades` : '');
   });
 
   /* ---------- Mobile carousels ---------- */
@@ -246,7 +252,7 @@
       if (!list.length) return '';
       return `
         <section class="shop-group">
-          <div class="shop-group__head"><h2>${esc(col.short)}</h2><span>${list.length} products</span></div>
+          <div class="shop-group__head"><h2>${esc(col.short)}</h2><span>${list.length} pieces</span></div>
           <div class="product-grid carousel">${list.map(productCard).join('')}</div>
         </section>`;
     }
@@ -258,8 +264,9 @@
       initCarousels(grid);
       filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === id)));
       const col = collections.find((c) => c.id === id);
-      heading.textContent = col ? col.name : 'Shop all';
-      blurb.textContent = col ? col.blurb : 'Lip, fragrance and face. Prices and launch dates are coming soon.';
+      heading.textContent = col ? col.name : 'The Collections';
+      blurb.textContent = col ? col.blurb : 'Every piece, crafted to be adored. Our full range arrives soon.';
+      observeReveals(grid);
     }
 
     filters.addEventListener('click', (e) => {
@@ -273,7 +280,7 @@
     apply(location.hash.slice(1));
   }
 
-  /* ---------- Forms ---------- */
+/* ---------- Forms ---------- */
 
   async function submitForm(form) {
     const status = form.querySelector('.form-status');
@@ -294,7 +301,7 @@
       }
       form.reset();
       form.classList.add('is-sent');
-      status.textContent = form.dataset.success || "Thank you, you're on the list.";
+      status.textContent = form.dataset.success || 'Thank you. Welcome to the Inner Circle.';
     } catch (err) {
       console.error(err);
       status.textContent = 'Something went wrong. Please try again in a moment.';
@@ -319,16 +326,17 @@
     dialog.className = 'notify-dialog';
     dialog.innerHTML = `
       <form method="dialog" class="notify-dialog__close"><button aria-label="Close">&times;</button></form>
-      <p class="label">Notify me</p>
-      <h2 data-notify-name></h2>
-      <p>Leave your email and we'll let you know as soon as it's available.</p>
-      <form class="inline-form" data-form="notify" data-success="Thank you. We'll email you when it arrives.">
+      <img src="assets/img/crown-monogram.png" alt="" width="72" height="72">
+      <p class="eyebrow">Be the first</p>
+      <h2 class="display" data-notify-name></h2>
+      <p>Leave your email and we will tell you the moment it arrives.</p>
+      <form class="inline-form" data-form="notify" data-success="Thank you. You will be the first to know.">
         <input type="hidden" name="form" value="Notify Me">
         <input type="hidden" name="product" value="">
         <input type="hidden" name="shade" value="">
         <label class="sr-only" for="notify-email">Email address</label>
         <input id="notify-email" type="email" name="email" placeholder="Your email address" required autocomplete="email">
-        <button class="btn btn--primary" type="submit">Notify me</button>
+        <button class="btn btn--gold" type="submit">Notify Me</button>
         <p class="form-status" role="status" aria-live="polite"></p>
       </form>`;
     document.body.appendChild(dialog);
@@ -354,7 +362,7 @@
     });
   }
 
-  /* ---------- Contact details ---------- */
+  /* ---------- Contact details on the contact page ---------- */
 
   function fillContactDetails() {
     document.querySelectorAll('[data-config-email]').forEach((el) => {
@@ -367,6 +375,31 @@
     });
   }
 
+  /* ---------- Reveal on scroll ---------- */
+
+  let observer = null;
+  function observeReveals(root) {
+    const els = (root || document).querySelectorAll('.reveal:not(.is-visible)');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    observer =
+      observer ||
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+      );
+    els.forEach((el) => observer.observe(el));
+  }
+
   renderHeader();
   renderFooter();
   renderFeatured();
@@ -375,4 +408,5 @@
   fillContactDetails();
   bindForms();
   bindNotify();
+  observeReveals();
 })();
