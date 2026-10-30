@@ -158,23 +158,75 @@
   }
 
   function productCard(p) {
-    const col = collectionById(p.collection);
+    const shades = p.shades || [];
     const media = p.image
       ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">`
-      : `<div class="product-card__art">${ART[p.art] || ART.perfume}<span>Coming Soon</span></div>`;
+      : `<div class="product-card__art">${ART[p.art] || ART.perfume}</div>`;
+    const swatches = shades
+      .map(
+        (s, i) =>
+          `<button class="swatch" type="button" style="--c:${esc(s.hex)}" data-shade="${esc(s.name)}" aria-label="${esc(s.name)}" aria-pressed="${i === 0}"></button>`
+      )
+      .join('');
     return `
       <article class="product-card reveal" data-collection="${esc(p.collection)}">
-        <div class="product-card__media${p.image ? '' : ' is-placeholder'}">${media}</div>
-        <div class="product-card__body">
-          <p class="product-card__collection">${esc(col.short)}</p>
-          <h3 class="product-card__name">${esc(p.name)}</h3>
-          <p class="product-card__desc">${esc(p.description)}</p>
-          <div class="product-card__foot">
-            <span class="product-card__price">${p.price ? esc(p.price) : 'Price TBA'}</span>
-            <button class="btn btn--ghost btn--sm" type="button" data-notify="${esc(p.id)}">Notify Me</button>
-          </div>
+        <div class="product-card__media${p.image ? '' : ' is-placeholder'}">
+          ${p.badge ? `<span class="product-card__badge">${esc(p.badge)}</span>` : ''}
+          ${media}
         </div>
+        <h3 class="product-card__name">${esc(p.name)}</h3>
+        <p class="product-card__type">${esc(p.type || collectionById(p.collection).short)}</p>
+        <div class="swatches">${swatches}</div>
+        <p class="product-card__shade">${shades.length ? esc(shades[0].name) + (shades.length > 1 ? ` &middot; ${shades.length} shades` : '') : ''}</p>
+        <p class="product-card__price">${p.price ? esc(p.price) : 'Price TBA'}</p>
+        <button class="btn-bag" type="button" data-notify="${esc(p.id)}">Notify Me</button>
       </article>`;
+  }
+
+  // Swatch clicks change the shade shown on that card.
+  document.addEventListener('click', (e) => {
+    const swatch = e.target.closest('.swatch');
+    if (!swatch) return;
+    const card = swatch.closest('.product-card');
+    card.querySelectorAll('.swatch').forEach((s) => s.setAttribute('aria-pressed', String(s === swatch)));
+    const count = card.querySelectorAll('.swatch').length;
+    card.querySelector('.product-card__shade').innerHTML =
+      esc(swatch.dataset.shade) + (count > 1 ? ` &middot; ${count} shades` : '');
+  });
+
+  /* ---------- Mobile carousels ---------- */
+
+  // On narrow screens .carousel lists scroll sideways (see CSS); these dots track position.
+  function initCarousel(track) {
+    let dots = track.nextElementSibling;
+    if (!dots || !dots.classList.contains('carousel-dots')) {
+      dots = document.createElement('div');
+      dots.className = 'carousel-dots';
+      track.after(dots);
+    }
+    const items = Array.from(track.children);
+    dots.innerHTML = items
+      .map((_, i) => `<button type="button" aria-label="Go to item ${i + 1}"${i === 0 ? ' aria-current="true"' : ''}></button>`)
+      .join('');
+
+    const buttons = Array.from(dots.children);
+    const current = () => {
+      const step = items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : 1;
+      return Math.max(0, Math.min(items.length - 1, Math.round(track.scrollLeft / step)));
+    };
+    track.onscroll = () => {
+      const i = current();
+      buttons.forEach((b, j) => (j === i ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+    };
+    dots.onclick = (e) => {
+      const i = buttons.indexOf(e.target);
+      if (i < 0) return;
+      track.scrollTo({ left: items[i].offsetLeft - items[0].offsetLeft, behavior: 'smooth' });
+    };
+  }
+
+  function initCarousels(root) {
+    (root || document).querySelectorAll('.carousel').forEach(initCarousel);
   }
 
   function renderFeatured() {
@@ -195,10 +247,21 @@
       .map((t) => `<li><button type="button" data-filter="${t.id}">${esc(t.short)}</button></li>`)
       .join('');
 
+    function group(col) {
+      const list = products.filter((p) => p.collection === col.id);
+      if (!list.length) return '';
+      return `
+        <section class="shop-group">
+          <div class="shop-group__head"><h2>${esc(col.short)}</h2><span>${list.length} pieces</span></div>
+          <div class="product-grid carousel">${list.map(productCard).join('')}</div>
+        </section>`;
+    }
+
     function apply(id) {
       if (!tabs.some((t) => t.id === id)) id = 'all';
-      const list = id === 'all' ? products : products.filter((p) => p.collection === id);
-      grid.innerHTML = list.map(productCard).join('');
+      const shown = id === 'all' ? collections : collections.filter((c) => c.id === id);
+      grid.innerHTML = shown.map(group).join('');
+      initCarousels(grid);
       filters.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === id)));
       const col = collections.find((c) => c.id === id);
       heading.textContent = col ? col.name : 'The Collections';
@@ -217,7 +280,7 @@
     apply(location.hash.slice(1));
   }
 
-  /* ---------- Forms ---------- */
+/* ---------- Forms ---------- */
 
   async function submitForm(form) {
     const status = form.querySelector('.form-status');
@@ -270,6 +333,7 @@
       <form class="inline-form" data-form="notify" data-success="Thank you. You will be the first to know.">
         <input type="hidden" name="form" value="Notify Me">
         <input type="hidden" name="product" value="">
+        <input type="hidden" name="shade" value="">
         <label class="sr-only" for="notify-email">Email address</label>
         <input id="notify-email" type="email" name="email" placeholder="Your email address" required autocomplete="email">
         <button class="btn btn--gold" type="submit">Notify Me</button>
@@ -289,8 +353,11 @@
       const form = dialog.querySelector('form[data-form]');
       form.classList.remove('is-sent');
       form.querySelector('.form-status').textContent = '';
+      const picked = btn.closest('.product-card')?.querySelector('.swatch[aria-pressed="true"]');
+      const shade = picked ? picked.dataset.shade : '';
       form.elements.product.value = p.name;
-      dialog.querySelector('[data-notify-name]').textContent = p.name;
+      form.elements.shade.value = shade;
+      dialog.querySelector('[data-notify-name]').textContent = shade ? `${p.name}, ${shade}` : p.name;
       dialog.showModal();
     });
   }
@@ -337,6 +404,7 @@
   renderFooter();
   renderFeatured();
   renderShop();
+  initCarousels();
   fillContactDetails();
   bindForms();
   bindNotify();
