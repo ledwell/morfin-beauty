@@ -22,7 +22,7 @@ Import the folder as a Vercel project with framework preset **Other** and no bui
 | Founder story and quotes | `founder.html` (marked `PLACEHOLDER`), plus the quote on `index.html` |
 | Privacy Policy | `privacy.html`: have it reviewed |
 | Logo | `assets/img/monogram.*`, `wordmark.*`, `logo-full.*` are cut out of `images/raw_logo.png`. Swap in a transparent PNG or SVG when available. |
-| Social share image URL | `og:image` in each page's `<head>` is relative. Make it absolute (`https://yourdomain/assets/img/og-image.jpg`) once the domain exists. |
+| Social share image | `og:image` in each page points at `https://morfinbeauty.net/assets/img/og-image.jpg`. |
 
 Product photos go in `assets/img/`. Tall, portrait shots on a dark or transparent background suit the cards best.
 

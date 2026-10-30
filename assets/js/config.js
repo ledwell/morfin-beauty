@@ -8,7 +8,7 @@ window.MB_CONFIG = {
   currency: 'USD',
   shipping: { standard: 8, express: 15, freeOver: 75 },
 
-  email: 'hello@morfinbeauty.com',
+  email: 'hello@morfinbeauty.net',
   social: {
     instagram: 'https://instagram.com/morfinbeauty',
     tiktok: 'https://tiktok.com/@morfinbeauty',
