@@ -7,7 +7,7 @@ The brand and its product line of luxury beauty products. The website exists to 
 Mary Morfin, who founded Morfin Beauty. Always "the Founder" in copy about the brand's origin.
 
 ## Collection
-A grouping of Morfin Beauty products by type. There are four: the **Lip Collection** (lipstick, lip gloss, lip oil), the **Fragrance Collection** (perfume), and the **Face Collection** (foundation, blush, highlighter) and **Gifts & Sets**. The Lip Collection is the brand's flagship. Avoid "category" in customer-facing language.
+A grouping of Morfin Beauty products by type. There are four: the **Lip Collection** (lipstick, lip gloss, lip oil), the **Fragrance Collection** (perfume), the **Face Collection** (foundation, blush, highlighter) and **Gifts & Sets** (see Set). The Lip Collection is the brand's flagship. Avoid "category" in customer-facing language.
 
 ## Tagline
 "Luxury Lips. Lasting Impression." The brand's single primary tagline, used site-wide regardless of Collection.
